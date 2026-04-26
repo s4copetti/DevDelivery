@@ -16,7 +16,7 @@ def pausar():
 
 def cabecalho(titulo: str):
     print("\n" + "═" * 52)
-    print(f""" DᴇᴠDᴇʟɪᴠᴇʀʏ — {titulo}""")
+    print(f"  🍔 DevDelivery — {titulo}")
     print("═" * 52)
 
 def ler_int(prompt: str, minimo: int = 1, maximo: int = 9999) -> int:
