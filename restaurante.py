@@ -33,6 +33,16 @@ class Restaurante:
         for i, produto in enumerate(disponiveis, 1):
             print(f"  [{i}] {produto}")
 
+    def mostrar_cardapio_completo(self):
+        """Exibe todos os produtos (disponíveis e indisponíveis) — usado no gerenciamento."""
+        if not self.__cardapio:
+            print("  Nenhum produto cadastrado.")
+            return
+        print(f"\n  {'PRODUTO':<25} {'PREÇO':>10}  STATUS")
+        print("  " + "-" * 50)
+        for i, produto in enumerate(self.__cardapio, 1):
+            print(f"  [{i}] {produto}")
+
     def get_produtos_disponiveis(self):
         return [p for p in self.__cardapio if p.disponivel]
 

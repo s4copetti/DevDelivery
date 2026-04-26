@@ -6,9 +6,11 @@ if TYPE_CHECKING:
 
 
 class Usuario:
-    def __init__(self, nome: str, endereco: str):
+    def __init__(self, nome: str, endereco: str, email: str = "", senha: str = ""):
         self.__nome = nome
         self.__endereco = endereco
+        self.__email = email
+        self.__senha = senha
         self.__historico: list[Pedido] = []
 
     @property
@@ -18,6 +20,14 @@ class Usuario:
     @property
     def endereco(self):
         return self.__endereco
+
+    @property
+    def email(self):
+        return self.__email
+
+    @property
+    def senha(self):
+        return self.__senha
 
     def adicionar_pedido_ao_historico(self, pedido: "Pedido"):
         self.__historico.append(pedido)
@@ -39,4 +49,4 @@ class Usuario:
         return pedido
 
     def __str__(self):
-        return f"{self.__nome} — {self.__endereco}"
+        return f"{self.__nome} — {self.__endereco} ({self.__email})"
