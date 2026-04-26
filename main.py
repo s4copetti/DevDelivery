@@ -1,6 +1,6 @@
 import os
 import sys
-from usuario import Usuario
+from usuario import Cliente, Fornecedor
 from restaurante import Restaurante
 from produto import Produto
 
@@ -43,14 +43,14 @@ def ler_float(prompt: str) -> float:
 #  Banco de dados em memória (espelhando o HTML)
 # ─────────────────────────────────────────────
 
-# Clientes cadastrados: lista de objetos Usuario
-cliente_db: list[Usuario] = [
-    Usuario("Ana Souza", "Rua das Flores, 42", "ana@email.com", "123456")
+# Clientes cadastrados
+cliente_db: list[Cliente] = [
+    Cliente("Ana Souza", "ana@email.com", "123456", "Rua das Flores, 42")
 ]
 
-# Fornecedores cadastrados: lista de dicts simples {email, senha, nome}
-fornecedor_db: list[dict] = [
-    {"email": "admin@devdelivery.com", "senha": "123456", "nome": "Admin"}
+# Fornecedores cadastrados
+fornecedor_db: list[Fornecedor] = [
+    Fornecedor("Admin", "admin@devdelivery.com", "123456")
 ]
 
 # ─────────────────────────────────────────────
@@ -96,7 +96,7 @@ def carregar_dados_demo() -> list[Restaurante]:
 #  Autenticação — Cliente
 # ─────────────────────────────────────────────
 
-def cadastrar_cliente() -> Usuario | None:
+def cadastrar_cliente() -> Cliente | None:
     limpar()
     cabecalho("Criar conta — Cliente")
     nome = input("  Seu nome: ").strip()
@@ -123,13 +123,13 @@ def cadastrar_cliente() -> Usuario | None:
         print("  ❌ A senha deve ter ao menos 6 caracteres.")
         pausar()
         return None
-    usuario = Usuario(nome, endereco, email, senha)
-    cliente_db.append(usuario)
+    cliente = Cliente(nome, email, senha, endereco)
+    cliente_db.append(cliente)
     print(f"\n  ✅ Conta criada! Bem-vindo(a), {nome}!")
     pausar()
-    return usuario
+    return cliente
 
-def login_cliente() -> Usuario | None:
+def login_cliente() -> Cliente | None:
     limpar()
     cabecalho("Entrar — Cliente")
     email = input("  E-mail: ").strip().lower()
@@ -138,18 +138,18 @@ def login_cliente() -> Usuario | None:
         pausar()
         return None
     senha = input("  Senha: ")
-    usuario = next((u for u in cliente_db if u.email == email and u.senha == senha), None)
-    if not usuario:
+    cliente = next((u for u in cliente_db if u.email == email and u.senha == senha), None)
+    if not cliente:
         print("  ❌ E-mail ou senha incorretos.")
         pausar()
         return None
-    return usuario
+    return cliente
 
 # ─────────────────────────────────────────────
 #  Autenticação — Fornecedor
 # ─────────────────────────────────────────────
 
-def cadastrar_fornecedor() -> dict | None:
+def cadastrar_fornecedor() -> Fornecedor | None:
     limpar()
     cabecalho("Criar conta — Fornecedor")
     nome = input("  Nome do responsável: ").strip()
@@ -162,7 +162,7 @@ def cadastrar_fornecedor() -> dict | None:
         print("  ❌ Informe um e-mail válido.")
         pausar()
         return None
-    if any(f["email"] == email for f in fornecedor_db):
+    if any(f.email == email for f in fornecedor_db):
         print("  ❌ E-mail já cadastrado.")
         pausar()
         return None
@@ -171,13 +171,13 @@ def cadastrar_fornecedor() -> dict | None:
         print("  ❌ A senha deve ter ao menos 6 caracteres.")
         pausar()
         return None
-    conta = {"email": email, "senha": senha, "nome": nome}
-    fornecedor_db.append(conta)
+    fornecedor = Fornecedor(nome, email, senha)
+    fornecedor_db.append(fornecedor)
     print(f"\n  ✅ Conta criada! Bem-vindo(a), {nome}!")
     pausar()
-    return conta
+    return fornecedor
 
-def login_fornecedor() -> dict | None:
+def login_fornecedor() -> Fornecedor | None:
     limpar()
     cabecalho("Entrar — Fornecedor")
     email = input("  E-mail: ").strip().lower()
@@ -186,18 +186,18 @@ def login_fornecedor() -> dict | None:
         pausar()
         return None
     senha = input("  Senha: ")
-    conta = next((f for f in fornecedor_db if f["email"] == email and f["senha"] == senha), None)
-    if not conta:
+    fornecedor = next((f for f in fornecedor_db if f.email == email and f.senha == senha), None)
+    if not fornecedor:
         print("  ❌ E-mail ou senha incorretos.")
         pausar()
         return None
-    return conta
+    return fornecedor
 
 # ─────────────────────────────────────────────
 #  Fluxo do Cliente
 # ─────────────────────────────────────────────
 
-def menu_cliente(usuario: Usuario, restaurantes: list):
+def menu_cliente(usuario: Cliente, restaurantes: list):
     while True:
         limpar()
         cabecalho(f"Olá, {usuario.nome.split()[0]}!")
@@ -235,7 +235,7 @@ def listar_restaurantes(restaurantes: list):
     for i, r in enumerate(restaurantes, 1):
         print(f"  [{i}] {r}")
 
-def fazer_pedido_cliente(usuario: Usuario, restaurantes: list):
+def fazer_pedido_cliente(usuario: Cliente, restaurantes: list):
     limpar()
     cabecalho("Fazer Pedido")
     listar_restaurantes(restaurantes)
@@ -302,10 +302,10 @@ def fazer_pedido_cliente(usuario: Usuario, restaurantes: list):
 #  Fluxo do Fornecedor
 # ─────────────────────────────────────────────
 
-def menu_fornecedor(conta: dict, restaurantes: list):
+def menu_fornecedor(fornecedor: Fornecedor, restaurantes: list):
     while True:
         limpar()
-        cabecalho(f"Fornecedor — {conta['nome']}")
+        cabecalho(f"Fornecedor — {fornecedor.nome}")
         print("  [1] Ver meus restaurantes")
         print("  [2] Cadastrar novo restaurante")
         print("  [3] Gerenciar cardápio")
@@ -454,13 +454,13 @@ def tela_home_fornecedor(restaurantes: list):
         opcao = input("\n  Escolha: ").strip()
 
         if opcao == "1":
-            conta = login_fornecedor()
-            if conta:
-                menu_fornecedor(conta, restaurantes)
+            fornecedor = login_fornecedor()
+            if fornecedor:
+                menu_fornecedor(fornecedor, restaurantes)
         elif opcao == "2":
-            conta = cadastrar_fornecedor()
-            if conta:
-                menu_fornecedor(conta, restaurantes)
+            fornecedor = cadastrar_fornecedor()
+            if fornecedor:
+                menu_fornecedor(fornecedor, restaurantes)
         elif opcao == "0":
             break
         else:
