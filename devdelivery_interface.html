@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DevDelivery</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --laranja: #D85A30;
+  --laranja-escuro: #993C1D;
+  --laranja-claro: #FAECE7;
+  --laranja-mid: #F0997B;
+  --verde: #639922;
+  --verde-claro: #EAF3DE;
+  --vermelho: #E24B4A;
+  --amarelo: #BA7517;
+  --bg: #F7F4EF;
+  --surface: #FFFFFF;
+  --border: rgba(0,0,0,0.08);
+  --text: #1A1714;
+  --muted: #7A7570;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+}
+
+.phone {
+  width: 100%;
+  max-width: 420px;
+  min-height: 780px;
+  background: var(--bg);
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.12);
+  position: relative;
+}
+
+/* ── TELAS ── */
+.screen { display: none; padding: 0; animation: fadeIn .25s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── SCROLL ── */
+.scroll-area { overflow-y: auto; max-height: 680px; padding: 0 1.25rem 5rem; }
+
+/* ── HEADER HERO ── */
+.hero {
+  background: var(--laranja);
+  padding: 2.5rem 1.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  top: -60px; right: -60px;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  bottom: -30px; left: 20px;
+}
+.hero-logo { font-size: 42px; margin-bottom: 12px; position: relative; z-index: 1; }
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 800;
+  color: #fff; line-height: 1.1;
+  position: relative; z-index: 1;
+}
+.hero p {
+  font-size: 14px; color: rgba(255,255,255,0.75);
+  margin-top: 6px; position: relative; z-index: 1;
+}
+
+/* ── TABS ── */
+.tab-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; padding: 1.25rem 1.25rem .75rem;
+}
+.tab {
+  padding: 11px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--muted);
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all .15s; text-align: center;
+}
+.tab.active {
+  background: var(--laranja); border-color: var(--laranja);
+  color: #fff;
+}
+
+/* ── FORM ── */
+.form-area { padding: 0 1.25rem 1.5rem; }
+.field { margin-bottom: .875rem; }
+.field label {
+  display: block; font-size: 12px; font-weight: 500;
+  color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
+  margin-bottom: 6px;
+}
+.field input, .field select {
+  width: 100%; padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 15px;
+  outline: none; transition: border-color .15s;
+}
+.field input:focus, .field select:focus { border-color: var(--laranja); }
+
+/* ── BOTÕES ── */
+.btn {
+  width: 100%; padding: 13px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--text);
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all .15s;
+}
+.btn:hover { background: #f0ece6; }
+.btn-primary {
+  background: var(--laranja); border-color: var(--laranja); color: #fff;
+}
+.btn-primary:hover { background: var(--laranja-escuro); border-color: var(--laranja-escuro); }
+.btn-sm { padding: 8px 16px; width: auto; font-size: 13px; }
+
+/* ── NAVBAR ── */
+.navbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.25rem .75rem;
+}
+.navbar-title {
+  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+}
+.back-btn {
+  background: var(--surface); border: 1.5px solid var(--border);
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; cursor: pointer; color: var(--text);
+  flex-shrink: 0; transition: background .15s;
+}
+.back-btn:hover { background: #f0ece6; }
+
+/* ── CARDS RESTAURANTE ── */
+.rest-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem; margin-bottom: .75rem;
+  cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: 12px;
+}
+.rest-card:hover { border-color: var(--laranja-mid); transform: translateY(-1px); }
+.rest-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--laranja-claro);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.rest-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+.rest-cat { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.stars { font-size: 12px; color: var(--amarelo); margin-top: 3px; }
+.chevron { color: var(--muted); font-size: 20px; margin-left: auto; }
+
+/* ── BADGE ── */
+.badge {
+  background: var(--laranja); color: #fff;
+  font-size: 11px; font-weight: 600; font-family: 'Syne', sans-serif;
+  padding: 2px 8px; border-radius: 20px;
+  display: inline-block; margin-left: 6px;
+}
+
+/* ── PRODUTO ── */
+.prod-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .875rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.prod-row:last-child { border-bottom: none; }
+.prod-name { font-size: 15px; font-weight: 500; }
+.prod-price { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.add-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--laranja); border: none; color: #fff;
+  font-size: 22px; line-height: 1;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background .15s;
+}
+.add-btn:hover { background: var(--laranja-escuro); }
+
+/* ── CART BAR ── */
+.cart-bar {
+  position: sticky; bottom: 0;
+  background: var(--laranja);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 1rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: .5rem;
+}
+.cart-info { font-size: 13px; color: rgba(255,255,255,0.75); }
+.cart-total { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
+.cart-btn {
+  background: #fff; border: none; color: var(--laranja);
+  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+  padding: 9px 18px; border-radius: 8px; cursor: pointer; transition: background .15s;
+}
+.cart-btn:hover { background: #f9ede8; }
+
+/* ── PEDIDO ── */
+.order-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 1rem; margin-bottom: .75rem;
+}
+.order-row {
+  display: flex; justify-content: space-between;
+  font-size: 14px; color: var(--muted);
+  padding: 5px 0; border-bottom: 1px solid var(--border);
+}
+.order-row:last-child { border-bottom: none; }
+.order-total {
+  display: flex; justify-content: space-between;
+  padding-top: 10px; margin-top: 4px;
+  border-top: 1.5px solid var(--border);
+  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+}
+
+/* ── PÍLULAS ── */
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: .5rem; }
+.pill {
+  padding: 8px 16px; border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--muted);
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: all .15s;
+}
+.pill.selected {
+  background: var(--laranja-claro);
+  border-color: var(--laranja-mid); color: var(--laranja-escuro);
+  font-weight: 500;
+}
+.section-label {
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .06em;
+  margin: 1.125rem 0 .5rem;
+}
+
+/* ── SUCESSO ── */
+.success-box { text-align: center; padding: 2rem 1.25rem 1rem; }
+.success-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--verde-claro);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; font-size: 30px;
+  animation: pop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.success-box h2 {
+  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 6px;
+}
+.success-box p { font-size: 14px; color: var(--muted); margin-bottom: 1.5rem; }
+
+/* ── HISTÓRICO ── */
+.hist-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 1rem; margin-bottom: .75rem;
+}
+.hist-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.hist-rest { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+.hist-date { font-size: 12px; color: var(--muted); }
+.hist-items { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.hist-total { font-size: 14px; font-weight: 600; color: var(--laranja); }
+
+/* ── FORNECEDOR ── */
+.forn-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 1rem; margin-bottom: .75rem;
+}
+.forn-prod-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px;
+}
+.forn-prod-row:last-child { border-bottom: none; }
+.avail-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  display: inline-block; margin-right: 8px;
+}
+.avail-dot.on { background: var(--verde); }
+.avail-dot.off { background: var(--vermelho); }
+.toggle {
+  width: 40px; height: 22px; border-radius: 11px;
+  border: none; cursor: pointer; position: relative;
+  transition: background .2s; flex-shrink: 0;
+}
+.toggle.on { background: var(--verde); }
+.toggle.off { background: #C8C5BF; }
+.toggle::after {
+  content: ''; position: absolute; top: 3px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; transition: left .2s;
+}
+.toggle.on::after { left: 21px; }
+.toggle.off::after { left: 3px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1A1714; color: #fff;
+  padding: 10px 22px; border-radius: 20px;
+  font-size: 14px; opacity: 0; transition: opacity .3s;
+  pointer-events: none; white-space: nowrap; z-index: 999;
+  font-family: 'DM Sans', sans-serif;
+}
+.toast.show { opacity: 1; }
+
+/* ── STAR RATING ── */
+.star-btn {
+  background: none; border: none; font-size: 30px;
+  cursor: pointer; padding: 0 3px; line-height: 1;
+  transition: transform .1s;
+}
+.star-btn:hover { transform: scale(1.15); }
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align: center; padding: 2.5rem 1rem;
+  font-size: 14px; color: var(--muted);
+}
+.empty span { font-size: 36px; display: block; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="phone">
+
+<!-- ══ TELA 0: HOME ══ -->
+<div id="s-home" class="screen active">
+  <div class="hero">
+    <div class="hero-logo">🍔</div>
+    <h1>DevDelivery</h1>
+    <p>O sistema que mata sua fome!</p>
+  </div>
+  <div class="tab-row">
+    <button class="tab active" id="tab-cli" onclick="setTab('cliente')">Cliente</button>
+    <button class="tab" id="tab-forn" onclick="setTab('fornecedor')">Fornecedor</button>
+  </div>
+  <div id="form-cliente" class="form-area">
+    <div class="field"><label>Seu nome</label><input id="inp-nome" placeholder="Ex: Ana Souza"/></div>
+    <div class="field"><label>Endereço de entrega</label><input id="inp-end" placeholder="Rua das Flores, 42"/></div>
+    <button class="btn btn-primary" onclick="loginCliente()" style="margin-top:.25rem">Entrar como cliente</button>
+  </div>
+  <div id="form-forn" class="form-area" style="display:none">
+    <div class="field"><label>Senha</label><input type="password" id="inp-senha" placeholder="••••••"/></div>
+    <button class="btn btn-primary" onclick="loginForn()" style="margin-top:.25rem">Entrar como fornecedor</button>
+  </div>
+</div>
+
+<!-- ══ TELA 1: RESTAURANTES ══ -->
+<div id="s-rests" class="screen">
+  <div class="navbar">
+    <div class="navbar-title" id="lbl-ola">Olá!</div>
+    <button class="btn btn-sm" onclick="logout()">Sair</button>
+  </div>
+  <div class="scroll-area">
+    <div class="section-label" style="margin-top:0">Restaurantes</div>
+    <div id="rest-list"></div>
+    <button class="btn" onclick="()=>{renderHist();goTo('s-hist')};" id="hist-btn" style="margin-top:.25rem">Ver meu histórico</button>
+  </div>
+</div>
+
+<!-- ══ TELA 2: CARDÁPIO ══ -->
+<div id="s-cardapio" class="screen">
+  <div class="navbar">
+    <button class="back-btn" onclick="goTo('s-rests')">‹</button>
+    <div class="navbar-title" id="lbl-rest-nome">Restaurante</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="scroll-area" id="scroll-cardapio">
+    <div id="prod-list"></div>
+  </div>
+  <div id="cart-bar" class="cart-bar" style="display:none">
+    <div>
+      <div class="cart-info" id="cart-qtd">0 itens</div>
+      <div class="cart-total" id="cart-val">R$ 0,00</div>
+    </div>
+    <button class="cart-btn" onclick="goTo('s-pedido');renderOrderItems()">Ver pedido →</button>
+  </div>
+</div>
+
+<!-- ══ TELA 3: PEDIDO ══ -->
+<div id="s-pedido" class="screen">
+  <div class="navbar">
+    <button class="back-btn" onclick="goTo('s-cardapio')">‹</button>
+    <div class="navbar-title">Finalizar pedido</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="scroll-area">
+    <div class="order-card">
+      <div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em">Itens</div>
+      <div id="order-items"></div>
+      <div class="order-total"><span>Total</span><span id="order-total-val">R$ 0,00</span></div>
+    </div>
+    <div class="section-label">Pagamento</div>
+    <div class="pill-row" id="pgto-pills">
+      <button class="pill" onclick="selPill(this,'pgto')">Cartão de crédito</button>
+      <button class="pill" onclick="selPill(this,'pgto')">Cartão de débito</button>
+      <button class="pill" onclick="selPill(this,'pgto')">Pix</button>
+      <button class="pill" onclick="selPill(this,'pgto')">Dinheiro</button>
+    </div>
+    <div class="section-label">Retirada</div>
+    <div class="pill-row" id="ret-pills">
+      <button class="pill" onclick="selPill(this,'ret')">Delivery</button>
+      <button class="pill" onclick="selPill(this,'ret')">Retirada no local</button>
+    </div>
+    <button class="btn btn-primary" style="margin-top:1.5rem" onclick="confirmarPedido()">Confirmar pedido</button>
+  </div>
+</div>
+
+<!-- ══ TELA 4: CONFIRMADO ══ -->
+<div id="s-ok" class="screen">
+  <div class="scroll-area" style="padding-top:1.25rem">
+    <div class="success-box">
+      <div class="success-icon">✓</div>
+      <h2>Pedido confirmado!</h2>
+      <p>Seu pedido foi enviado ao restaurante.</p>
+    </div>
+    <div class="order-card" id="resumo-card"></div>
+    <div class="section-label">Avaliar restaurante</div>
+    <div id="star-row" style="display:flex;gap:4px;padding:.25rem 0 1rem"></div>
+    <button class="btn btn-primary" onclick="goTo('s-rests')">Novo pedido</button>
+    <button class="btn" style="margin-top:.5rem" onclick="renderHist();goTo('s-hist')">Ver histórico</button>
+  </div>
+</div>
+
+<!-- ══ TELA 5: HISTÓRICO ══ -->
+<div id="s-hist" class="screen">
+  <div class="navbar">
+    <button class="back-btn" onclick="goTo('s-rests')">‹</button>
+    <div class="navbar-title">Meus pedidos</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="scroll-area"><div id="hist-list"></div></div>
+</div>
+
+<!-- ══ TELA 6: FORNECEDOR ══ -->
+<div id="s-forn" class="screen">
+  <div class="navbar">
+    <div class="navbar-title">Fornecedor</div>
+    <button class="btn btn-sm" onclick="logout()">Sair</button>
+  </div>
+  <div class="scroll-area">
+    <div id="forn-rest-list"></div>
+    <button class="btn" style="margin-top:.25rem" onclick="goTo('s-novo-rest')">+ Cadastrar restaurante</button>
+  </div>
+</div>
+
+<!-- ══ TELA 7: NOVO RESTAURANTE ══ -->
+<div id="s-novo-rest" class="screen">
+  <div class="navbar">
+    <button class="back-btn" onclick="goTo('s-forn')">‹</button>
+    <div class="navbar-title">Novo restaurante</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="form-area" style="padding-top:.5rem">
+    <div class="field"><label>Nome</label><input id="nr-nome" placeholder="Ex: Pizzaria Roma"/></div>
+    <div class="field">
+      <label>Categoria</label>
+      <select id="nr-cat">
+        <option>Fast-food</option><option>Italiana</option><option>Japonesa</option>
+        <option>Brasileira</option><option>Árabe</option><option>Vegana</option><option>Outros</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="cadastrarRest()">Cadastrar</button>
+  </div>
+</div>
+
+<!-- ══ TELA 8: GERENCIAR ══ -->
+<div id="s-gerenciar" class="screen">
+  <div class="navbar">
+    <button class="back-btn" onclick="goTo('s-forn')">‹</button>
+    <div class="navbar-title" id="lbl-ger-nome">Cardápio</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="scroll-area">
+    <div id="ger-prod-list"></div>
+    <div class="forn-card" style="margin-top:.75rem">
+      <div style="font-size:13px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Adicionar produto</div>
+      <div class="field"><label>Nome</label><input id="np-nome" placeholder="Ex: X-Burguer"/></div>
+      <div class="field"><label>Preço (R$)</label><input id="np-preco" type="number" placeholder="0.00" step="0.01"/></div>
+      <button class="btn btn-primary" onclick="addProduto()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+
+<script>
+const ICONS = {'Fast-food':'🍔','Italiana':'🍝','Japonesa':'🍣','Brasileira':'🍖','Árabe':'🥙','Vegana':'🥗','Outros':'🏪'};
+
+let state = {
+  user: null,
+  mode: 'cliente',
+  rests: [
+    {id:1,nome:'Burguer House',cat:'Fast-food',avaliacoes:[4.5,4.0],prods:[
+      {id:1,nome:'X-Burguer',preco:22.90,disp:true},
+      {id:2,nome:'X-Bacon',preco:27.50,disp:true},
+      {id:3,nome:'X-Salada',preco:20.00,disp:true},
+      {id:4,nome:'Batata Frita P',preco:10.00,disp:true},
+      {id:5,nome:'Batata Frita G',preco:15.00,disp:false},
+      {id:6,nome:'Refrigerante',preco:8.00,disp:true}
+    ]},
+    {id:2,nome:'Sushi Nippon',cat:'Japonesa',avaliacoes:[5.0,4.8],prods:[
+      {id:7,nome:'Combo 16 peças',preco:45.00,disp:true},
+      {id:8,nome:'Combo 30 peças',preco:75.00,disp:true},
+      {id:9,nome:'Temaki Salmão',preco:28.00,disp:true},
+      {id:10,nome:'Missoshiru',preco:12.00,disp:true},
+      {id:11,nome:'Saquê',preco:18.00,disp:true}
+    ]},
+    {id:3,nome:'La Bella Italia',cat:'Italiana',avaliacoes:[4.7],prods:[
+      {id:12,nome:'Nhoque ao Sugo',preco:38.00,disp:true},
+      {id:13,nome:'Lasanha Bolonhesa',preco:42.00,disp:true},
+      {id:14,nome:'Pizza Margherita',preco:55.00,disp:true},
+      {id:15,nome:'Tiramisu',preco:22.00,disp:true},
+      {id:16,nome:'Suco Natural',preco:10.00,disp:true}
+    ]}
+  ],
+  cart: [],
+  curRest: null,
+  pedidos: [],
+  gerRest: null,
+  pgto: null,
+  ret: null,
+  nextId: 100
+};
+
+function R(id){ return document.getElementById(id); }
+function fmt(v){ return 'R$ '+v.toFixed(2).replace('.',','); }
+function avg(arr){ return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : null; }
+function stars(n){
+  if(!n) return '<span style="color:var(--muted)">Sem avaliações</span>';
+  const f = Math.round(n);
+  return '★'.repeat(f)+'☆'.repeat(5-f)+' <b>'+n.toFixed(1)+'</b>';
+}
+
+function showToast(msg){
+  const t = R('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2300);
+}
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  R(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function setTab(mode){
+  state.mode = mode;
+  R('tab-cli').classList.toggle('active', mode==='cliente');
+  R('tab-forn').classList.toggle('active', mode==='fornecedor');
+  R('form-cliente').style.display = mode==='cliente' ? 'block' : 'none';
+  R('form-forn').style.display = mode==='fornecedor' ? 'block' : 'none';
+}
+
+function loginCliente(){
+  const nome = R('inp-nome').value.trim() || 'Cliente';
+  const end  = R('inp-end').value.trim() || 'Não informado';
+  state.user = {nome, end};
+  R('lbl-ola').textContent = 'Olá, '+nome.split(' ')[0]+'!';
+  R('hist-btn').onclick = ()=>{ renderHist(); goTo('s-hist'); };
+  renderRests();
+  goTo('s-rests');
+}
+
+function loginForn(){
+  renderForn();
+  goTo('s-forn');
+}
+
+function logout(){
+  state.user = null; state.cart = []; state.curRest = null;
+  goTo('s-home');
+}
+
+/* ── RESTAURANTES ── */
+function renderRests(){
+  const c = R('rest-list'); c.innerHTML = '';
+  if(!state.rests.length){
+    c.innerHTML = '<div class="empty"><span>🏪</span>Nenhum restaurante cadastrado.</div>';
+    return;
+  }
+  state.rests.forEach(r=>{
+    const a = avg(r.avaliacoes);
+    const d = document.createElement('div');
+    d.className = 'rest-card';
+    d.innerHTML = `
+      <div class="rest-icon">${ICONS[r.cat]||'🏪'}</div>
+      <div style="flex:1">
+        <div class="rest-name">${r.nome}</div>
+        <div class="rest-cat">${r.cat}</div>
+        <div class="stars">${stars(a)}</div>
+      </div>
+      <span class="chevron">›</span>`;
+    d.onclick = ()=>abrirRest(r.id);
+    c.appendChild(d);
+  });
+}
+
+/* ── CARDÁPIO ── */
+function abrirRest(id){
+  state.curRest = state.rests.find(r=>r.id===id);
+  state.cart = [];
+  R('lbl-rest-nome').textContent = state.curRest.nome;
+  renderCardapio();
+  goTo('s-cardapio');
+}
+
+function renderCardapio(){
+  const r = state.curRest;
+  const c = R('prod-list'); c.innerHTML = '';
+  r.prods.filter(p=>p.disp).forEach(p=>{
+    const inCart = state.cart.filter(x=>x.id===p.id).length;
+    const d = document.createElement('div');
+    d.className = 'prod-row';
+    d.innerHTML = `
+      <div>
+        <div class="prod-name">${p.nome}${inCart?`<span class="badge">${inCart}</span>`:''}</div>
+        <div class="prod-price">${fmt(p.preco)}</div>
+      </div>
+      <button class="add-btn" data-id="${p.id}">+</button>`;
+    d.querySelector('.add-btn').onclick = ()=>addToCart(p.id);
+    c.appendChild(d);
+  });
+  updateCartBar();
+}
+
+function addToCart(id){
+  const prod = state.curRest.prods.find(p=>p.id===id);
+  state.cart.push(prod);
+  renderCardapio();
+}
+
+function updateCartBar(){
+  const cb = R('cart-bar');
+  if(!state.cart.length){ cb.style.display='none'; return; }
+  cb.style.display = 'flex';
+  const total = state.cart.reduce((s,p)=>s+p.preco, 0);
+  R('cart-qtd').textContent = state.cart.length+' item'+(state.cart.length>1?'s':'');
+  R('cart-val').textContent = fmt(total);
+}
+
+/* ── PEDIDO ── */
+function renderOrderItems(){
+  const c = R('order-items'); c.innerHTML = '';
+  const counts = {};
+  state.cart.forEach(p=>{ counts[p.nome]=(counts[p.nome]||0)+1; });
+  const seen = {};
+  state.cart.forEach(p=>{
+    if(seen[p.nome]) return; seen[p.nome]=true;
+    const d = document.createElement('div');
+    d.className = 'order-row';
+    d.innerHTML = `<span>${counts[p.nome]>1?counts[p.nome]+'× ':''} ${p.nome}</span><span>${fmt(p.preco*counts[p.nome])}</span>`;
+    c.appendChild(d);
+  });
+  const total = state.cart.reduce((s,p)=>s+p.preco, 0);
+  R('order-total-val').textContent = fmt(total);
+}
+
+function selPill(el, group){
+  const container = group==='pgto' ? R('pgto-pills') : R('ret-pills');
+  container.querySelectorAll('.pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+  if(group==='pgto') state.pgto = el.textContent;
+  else state.ret = el.textContent;
+}
+
+function confirmarPedido(){
+  if(!state.pgto){ showToast('Escolha a forma de pagamento'); return; }
+  if(!state.ret){  showToast('Escolha a forma de retirada');  return; }
+  const total = state.cart.reduce((s,p)=>s+p.preco, 0);
+  const now = new Date();
+  const data = now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const ped = {
+    id: ++state.nextId,
+    rest: state.curRest.nome,
+    items: [...state.cart],
+    pgto: state.pgto, ret: state.ret,
+    total, data, status: 'Aguardando confirmação'
+  };
+  state.pedidos.push(ped);
+  renderResumoOk(ped);
+  renderStars(ped.id);
+  goTo('s-ok');
+}
+
+function renderResumoOk(ped){
+  const c = R('resumo-card');
+  const counts = {};
+  ped.items.forEach(p=>{ counts[p.nome]=(counts[p.nome]||0)+1; });
+  const rows = [...new Set(ped.items.map(p=>p.nome))].map(n=>{
+    const preco = ped.items.find(p=>p.nome===n).preco;
+    return `<div class="order-row"><span>${counts[n]>1?counts[n]+'× ':''} ${n}</span><span>${fmt(preco*counts[n])}</span></div>`;
+  }).join('');
+  c.innerHTML = `
+    <div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em">🏠 ${ped.rest}</div>
+    ${rows}
+    <div class="order-total"><span>Total</span><span>${fmt(ped.total)}</span></div>
+    <div style="font-size:13px;color:var(--muted);margin-top:.75rem;display:flex;gap:16px">
+      <span>💳 ${ped.pgto}</span><span>🛵 ${ped.ret}</span>
+    </div>`;
+}
+
+function renderStars(pedId){
+  const c = R('star-row'); c.innerHTML = '';
+  let sel = 0;
+  for(let i=1;i<=5;i++){
+    const b = document.createElement('button');
+    b.className = 'star-btn';
+    b.dataset.v = i;
+    b.onmouseenter = ()=>paintStars(c, i, sel);
+    b.onmouseleave = ()=>paintStars(c, sel, sel);
+    b.onclick = ()=>{
+      sel = i;
+      const ped = state.pedidos.find(p=>p.id===pedId);
+      const rest = state.rests.find(r=>r.nome===ped.rest);
+      if(rest) rest.avaliacoes.push(i);
+      paintStars(c, i, i);
+      showToast('Avaliação enviada!');
+    };
+    c.appendChild(b);
+  }
+  paintStars(c, 0, 0);
+}
+
+function paintStars(container, hov, sel){
+  Array.from(container.children).forEach((b,i)=>{
+    b.textContent = (i<hov||i<sel) ? '★' : '☆';
+    b.style.color = i<sel ? '#BA7517' : i<hov ? '#EF9F27' : '#C8C5BF';
+  });
+}
+
+/* ── HISTÓRICO ── */
+function renderHist(){
+  const c = R('hist-list'); c.innerHTML = '';
+  if(!state.pedidos.length){
+    c.innerHTML = '<div class="empty"><span>📋</span>Nenhum pedido ainda.</div>';
+    return;
+  }
+  [...state.pedidos].reverse().forEach(p=>{
+    const d = document.createElement('div');
+    d.className = 'hist-card';
+    const nomes = [...new Set(p.items.map(i=>i.nome))].slice(0,3).join(', ')+(p.items.length>3?'...':'');
+    d.innerHTML = `
+      <div class="hist-header">
+        <span class="hist-rest">${p.rest}</span>
+        <span class="hist-date">${p.data}</span>
+      </div>
+      <div class="hist-items">${nomes}</div>
+      <div class="hist-total">${fmt(p.total)}</div>`;
+    c.appendChild(d);
+  });
+}
+
+/* ── FORNECEDOR ── */
+function renderForn(){
+  const c = R('forn-rest-list'); c.innerHTML = '';
+  state.rests.forEach(r=>{
+    const disp = r.prods.filter(p=>p.disp).length;
+    const d = document.createElement('div');
+    d.className = 'forn-card';
+    d.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700">${r.nome}</div>
+          <div style="font-size:13px;color:var(--muted)">${r.cat} · ${disp} disponíveis</div>
+        </div>
+        <button class="btn btn-sm" onclick="abrirGerenciar(${r.id})">Gerenciar</button>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+
+function abrirGerenciar(id){
+  state.gerRest = state.rests.find(r=>r.id===id);
+  R('lbl-ger-nome').textContent = state.gerRest.nome;
+  renderGerProd();
+  goTo('s-gerenciar');
+}
+
+function renderGerProd(){
+  const c = R('ger-prod-list'); c.innerHTML = '';
+  state.gerRest.prods.forEach(p=>{
+    const d = document.createElement('div');
+    d.className = 'forn-card';
+    d.innerHTML = `<div class="forn-prod-row">
+      <span><span class="avail-dot ${p.disp?'on':'off'}"></span>${p.nome}</span>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:14px;color:var(--muted)">${fmt(p.preco)}</span>
+        <button class="toggle ${p.disp?'on':'off'}" onclick="toggleProd(${p.id})"></button>
+      </div>
+    </div>`;
+    c.appendChild(d);
+  });
+}
+
+function toggleProd(id){
+  const prod = state.gerRest.prods.find(p=>p.id===id);
+  prod.disp = !prod.disp;
+  renderGerProd();
+  showToast(`'${prod.nome}' marcado como ${prod.disp?'disponível':'indisponível'}`);
+}
+
+function addProduto(){
+  const nome = R('np-nome').value.trim();
+  const preco = parseFloat(R('np-preco').value);
+  if(!nome || isNaN(preco) || preco<0){ showToast('Preencha nome e preço válidos'); return; }
+  state.gerRest.prods.push({id:++state.nextId, nome, preco, disp:true});
+  R('np-nome').value = ''; R('np-preco').value = '';
+  renderGerProd();
+  showToast(`'${nome}' adicionado!`);
+}
+
+function cadastrarRest(){
+  const nome = R('nr-nome').value.trim();
+  if(!nome){ showToast('Informe um nome'); return; }
+  const cat = R('nr-cat').value;
+  state.rests.push({id:++state.nextId, nome, cat, avaliacoes:[], prods:[]});
+  R('nr-nome').value = '';
+  renderForn();
+  goTo('s-forn');
+  showToast(`'${nome}' cadastrado!`);
+}
+</script>
+</body>
+</html>
