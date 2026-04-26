@@ -5,21 +5,21 @@ if TYPE_CHECKING:
     from pedido import Pedido
 
 
+# ─────────────────────────────────────────────
+#  Classe base
+# ─────────────────────────────────────────────
+
 class Usuario:
-    def __init__(self, nome: str, endereco: str, email: str = "", senha: str = ""):
+    """Classe base com atributos e comportamentos comuns a todo usuário."""
+
+    def __init__(self, nome: str, email: str, senha: str):
         self.__nome = nome
-        self.__endereco = endereco
         self.__email = email
         self.__senha = senha
-        self.__historico: list[Pedido] = []
 
     @property
     def nome(self):
         return self.__nome
-
-    @property
-    def endereco(self):
-        return self.__endereco
 
     @property
     def email(self):
@@ -29,24 +29,57 @@ class Usuario:
     def senha(self):
         return self.__senha
 
-    def adicionar_pedido_ao_historico(self, pedido: "Pedido"):
-        self.__historico.append(pedido)
+    def __str__(self):
+        return f"{self.__nome} ({self.__email})"
+
+
+# ─────────────────────────────────────────────
+#  Subclasse Cliente
+# ─────────────────────────────────────────────
+
+class Cliente(Usuario):
+    """Usuário que realiza pedidos. Herda de Usuario e adiciona endereço e histórico."""
+
+    def __init__(self, nome: str, email: str, senha: str, endereco: str):
+        super().__init__(nome, email, senha)   # repassa nome/email/senha para a base
+        self.__endereco = endereco
+        self.__historico: list[Pedido] = []
+
+    @property
+    def endereco(self):
+        return self.__endereco
 
     def ver_historico(self):
         if not self.__historico:
             print("  Você ainda não fez nenhum pedido.")
             return
-        print(f"\n  📋 Histórico de pedidos de {self.__nome}:")
+        print(f"\n  📋 Histórico de pedidos de {self.nome}:")
         print("  " + "=" * 50)
         for i, pedido in enumerate(self.__historico, 1):
             print(f"\n  Pedido #{i}")
             pedido.resumo()
 
-    def fazer_pedido(self, restaurante, produtos: list, forma_pagamento: str, forma_retirada: str) -> "Pedido":
+    def fazer_pedido(self, restaurante, produtos: list,
+                     forma_pagamento: str, forma_retirada: str) -> "Pedido":
         from pedido import Pedido
         pedido = Pedido(self, restaurante, produtos, forma_pagamento, forma_retirada)
         self.__historico.append(pedido)
         return pedido
 
     def __str__(self):
-        return f"{self.__nome} — {self.__endereco} ({self.__email})"
+        return f"{self.nome} — {self.__endereco} ({self.email})"
+
+
+# ─────────────────────────────────────────────
+#  Subclasse Fornecedor
+# ─────────────────────────────────────────────
+
+class Fornecedor(Usuario):
+    """Usuário que gerencia restaurantes. Herda de Usuario."""
+
+    def __init__(self, nome: str, email: str, senha: str):
+        super().__init__(nome, email, senha)
+
+    def __str__(self):
+        return f"Fornecedor: {self.nome} ({self.email})"
+
