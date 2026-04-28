@@ -1,6 +1,5 @@
 from produto import Produto
 
-
 class Restaurante:
     def __init__(self, nome: str, categoria: str):
         self.__nome = nome
@@ -24,17 +23,16 @@ class Restaurante:
         self.__cardapio.append(produto)
 
     def mostrar_cardapio(self):
-        disponiveis = [p for p in self.__cardapio if p.disponivel]
+        disponiveis = [p for p in self.__cardapio if p.disponivel] 
         if not disponiveis:
             print("  Nenhum produto disponível no momento.")
             return
         print(f"\n  {'PRODUTO':<25} {'PREÇO':>10}")
         print("  " + "-" * 40)
-        for i, produto in enumerate(disponiveis, 1):
+        for i, produto in enumerate(disponiveis, 1): 
             print(f"  [{i}] {produto}")
 
     def mostrar_cardapio_completo(self):
-        """Exibe todos os produtos (disponíveis e indisponíveis) — usado no gerenciamento."""
         if not self.__cardapio:
             print("  Nenhum produto cadastrado.")
             return
@@ -57,7 +55,7 @@ class Restaurante:
 
     def atualizar_preco(self, nome_produto: str, novo_preco: float):
         for produto in self.__cardapio:
-            if produto.nome.lower() == nome_produto.lower():
+            if produto.nome.lower() == nome_produto.lower(): 
                 produto.preco = novo_preco
                 print(f"✅ Preço de '{produto.nome}' atualizado para R$ {novo_preco:.2f}")
                 return

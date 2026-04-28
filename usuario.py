@@ -4,14 +4,11 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pedido import Pedido
 
-
 # ─────────────────────────────────────────────
 #  Classe base
 # ─────────────────────────────────────────────
 
 class Usuario:
-    """Classe base com atributos e comportamentos comuns a todo usuário."""
-
     def __init__(self, nome: str, email: str, senha: str):
         self.__nome = nome
         self.__email = email
@@ -32,16 +29,13 @@ class Usuario:
     def __str__(self):
         return f"{self.__nome} ({self.__email})"
 
-
 # ─────────────────────────────────────────────
 #  Subclasse Cliente
 # ─────────────────────────────────────────────
 
 class Cliente(Usuario):
-    """Usuário que realiza pedidos. Herda de Usuario e adiciona endereço e histórico."""
-
     def __init__(self, nome: str, email: str, senha: str, endereco: str):
-        super().__init__(nome, email, senha)   # repassa nome/email/senha para a base
+        super().__init__(nome, email, senha)   
         self.__endereco = endereco
         self.__historico: list[Pedido] = []
 
@@ -59,8 +53,7 @@ class Cliente(Usuario):
             print(f"\n  Pedido #{i}")
             pedido.resumo()
 
-    def fazer_pedido(self, restaurante, produtos: list,
-                     forma_pagamento: str, forma_retirada: str) -> "Pedido":
+    def fazer_pedido(self, restaurante, produtos: list, forma_pagamento: str, forma_retirada: str) -> "Pedido":
         from pedido import Pedido
         pedido = Pedido(self, restaurante, produtos, forma_pagamento, forma_retirada)
         self.__historico.append(pedido)
@@ -69,14 +62,11 @@ class Cliente(Usuario):
     def __str__(self):
         return f"{self.nome} — {self.__endereco} ({self.email})"
 
-
 # ─────────────────────────────────────────────
 #  Subclasse Fornecedor
 # ─────────────────────────────────────────────
 
 class Fornecedor(Usuario):
-    """Usuário que gerencia restaurantes. Herda de Usuario."""
-
     def __init__(self, nome: str, email: str, senha: str):
         super().__init__(nome, email, senha)
 

@@ -40,15 +40,13 @@ def ler_float(prompt: str) -> float:
             print("  ❌ Entrada inválida. Digite um número.")
 
 # ─────────────────────────────────────────────
-#  Banco de dados em memória (espelhando o HTML)
+#  Banco de dados em memória 
 # ─────────────────────────────────────────────
 
-# Clientes cadastrados
 cliente_db: list[Cliente] = [
     Cliente("Ana Souza", "ana@email.com", "123456", "Rua das Flores, 42")
 ]
 
-# Fornecedores cadastrados
 fornecedor_db: list[Fornecedor] = [
     Fornecedor("Admin", "admin@devdelivery.com", "123456")
 ]
@@ -289,7 +287,6 @@ def fazer_pedido_cliente(usuario: Cliente, restaurantes: list):
     pedido.resumo()
     print("  🍽️  Seu pedido foi enviado ao restaurante!")
 
-    # Avaliação — estrelas 1-5 (igual ao HTML)
     print("\n  Deseja avaliar o restaurante? (s/n): ", end="")
     if input().strip().lower() == "s":
         nota = ler_int("  Nota de 1 a 5 estrelas: ", 1, 5)
@@ -329,7 +326,6 @@ def menu_fornecedor(fornecedor: Fornecedor, restaurantes: list):
             pausar()
 
 def cadastrar_restaurante(restaurantes: list):
-    """Espelha a tela 'Novo restaurante' do HTML: nome + categoria fixa."""
     limpar()
     cabecalho("Novo Restaurante")
     nome = input("  Nome do restaurante: ").strip()
@@ -351,7 +347,6 @@ def cadastrar_restaurante(restaurantes: list):
     pausar()
 
 def gerenciar_cardapio(restaurantes: list):
-    """Espelha a tela 'Gerenciar' do HTML: lista produtos com toggle + formulário de adição."""
     limpar()
     cabecalho("Gerenciar Cardápio")
 
@@ -375,7 +370,6 @@ def gerenciar_cardapio(restaurantes: list):
         opcao = input("\n  Escolha: ").strip()
 
         if opcao == "1":
-            # Formulário igual ao HTML: nome, preço, ingredientes
             limpar()
             cabecalho("Adicionar Produto")
             nome_prod = input("  Nome do produto: ").strip()
@@ -390,7 +384,6 @@ def gerenciar_cardapio(restaurantes: list):
             pausar()
 
         elif opcao == "2":
-            # Toggle direto pelo número (igual ao botão toggle do HTML)
             todos = restaurante.cardapio
             if not todos:
                 print("  Nenhum produto no cardápio.")
@@ -420,7 +413,6 @@ def gerenciar_cardapio(restaurantes: list):
 # ─────────────────────────────────────────────
 
 def tela_home_cliente(restaurantes: list):
-    """Submenu de acesso cliente: login ou cadastro (espelha as abas do HTML)."""
     while True:
         limpar()
         cabecalho("Área do Cliente")
@@ -444,7 +436,6 @@ def tela_home_cliente(restaurantes: list):
             pausar()
 
 def tela_home_fornecedor(restaurantes: list):
-    """Submenu de acesso fornecedor: login ou cadastro (espelha as abas do HTML)."""
     while True:
         limpar()
         cabecalho("Área do Fornecedor")

@@ -1,7 +1,6 @@
 from produto import Produto
 from datetime import datetime
 
-
 class Pedido:
     _contador = 1
 
